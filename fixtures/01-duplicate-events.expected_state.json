@@ -1,0 +1,14 @@
+{
+  "document_id": "fixture-01-doc",
+  "version": 1,
+  "facts": {
+    "title": {
+      "value": "Q1 Report",
+      "sourceAgentId": "agent-alpha",
+      "confidence": 0.9,
+      "weight": 0.81
+    }
+  },
+  "resolved_at": "2026-01-01T00:00:00.000Z",
+  "conflict_resolution_notes": "No conflicts were detected across 1 resolved fact key(s); each had either a single source or full agreement among sources."
+}

@@ -1,0 +1,14 @@
+{
+  "document_id": "fixture-03-doc",
+  "version": 2,
+  "facts": {
+    "category": {
+      "value": "invoice",
+      "sourceAgentId": "agent-alpha",
+      "confidence": 0.85,
+      "weight": 0.765
+    }
+  },
+  "resolved_at": "2026-01-01T00:00:00.000Z",
+  "conflict_resolution_notes": "For 'category': agent-alpha asserted \"invoice\" (trust 0.9 × confidence 0.85 × recency 1 = weight 0.765); agent-beta asserted \"receipt\" (trust 0.75 × confidence 0.6 × recency 1 = weight 0.45). The value \"invoice\" won with total weight 0.765."
+}

@@ -1,0 +1,18 @@
+[
+  {
+    "agent_id": "agent-alpha",
+    "document_id": "fixture-01-doc",
+    "event_type": "extraction",
+    "event_timestamp": "2026-01-01T00:00:00.000Z",
+    "confidence_score": 0.9,
+    "facts": [{ "key": "title", "value": "Q1 Report" }]
+  },
+  {
+    "agent_id": "agent-alpha",
+    "document_id": "fixture-01-doc",
+    "event_type": "extraction",
+    "event_timestamp": "2026-01-01T00:00:00.000Z",
+    "confidence_score": 0.9,
+    "facts": [{ "key": "title", "value": "Q1 Report" }]
+  }
+]

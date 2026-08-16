@@ -1,0 +1,18 @@
+[
+  {
+    "agent_id": "agent-alpha",
+    "document_id": "fixture-04-doc",
+    "event_type": "extraction",
+    "event_timestamp": "2026-01-01T00:00:00.000Z",
+    "confidence_score": 0.3,
+    "facts": [{ "key": "risk_level", "value": "low" }]
+  },
+  {
+    "agent_id": "agent-delta",
+    "document_id": "fixture-04-doc",
+    "event_type": "extraction",
+    "event_timestamp": "2026-01-01T00:00:00.000Z",
+    "confidence_score": 0.95,
+    "facts": [{ "key": "risk_level", "value": "high" }]
+  }
+]

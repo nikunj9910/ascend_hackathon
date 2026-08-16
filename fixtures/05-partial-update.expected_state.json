@@ -1,0 +1,20 @@
+{
+  "document_id": "fixture-05-doc",
+  "version": 2,
+  "facts": {
+    "author": {
+      "value": "Alice",
+      "sourceAgentId": "agent-alpha",
+      "confidence": 0.9,
+      "weight": 0.7915
+    },
+    "title": {
+      "value": "Report (Final)",
+      "sourceAgentId": "agent-alpha",
+      "confidence": 0.9,
+      "weight": 0.81
+    }
+  },
+  "resolved_at": "2026-01-02T00:00:00.000Z",
+  "conflict_resolution_notes": "No conflicts were detected across 2 resolved fact key(s); each had either a single source or full agreement among sources."
+}

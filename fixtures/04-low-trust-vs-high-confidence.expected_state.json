@@ -1,0 +1,14 @@
+{
+  "document_id": "fixture-04-doc",
+  "version": 2,
+  "facts": {
+    "risk_level": {
+      "value": "high",
+      "sourceAgentId": "agent-delta",
+      "confidence": 0.95,
+      "weight": 0.3325
+    }
+  },
+  "resolved_at": "2026-01-01T00:00:00.000Z",
+  "conflict_resolution_notes": "For 'risk_level': agent-delta asserted \"high\" (trust 0.35 × confidence 0.95 × recency 1 = weight 0.3325); agent-alpha asserted \"low\" (trust 0.9 × confidence 0.3 × recency 1 = weight 0.27). The value \"high\" won with total weight 0.3325."
+}
