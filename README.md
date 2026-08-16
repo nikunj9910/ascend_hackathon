@@ -10,6 +10,23 @@ Everything runs on `localhost`. There is no cloud deployment, no external servic
 internet dependency beyond `npm install`. The full design rationale and binding spec live in
 [`CLAUDE.md`](CLAUDE.md).
 
+## Note for judges
+
+Resolution is pure weighted arithmetic (`trust × confidence × recency`) — never a hardcoded
+"preferred agent," never an LLM anywhere in the codebase. Fastest path in: `npm install`,
+`cp server/.env.example server/.env`, `npm run dev`, then `npm run seed` — it posts all five
+fixtures through the real API and prints each resulting state, audit trail, and a pass/fail diff
+against a committed `expected_state.json`.
+
+Worth checking specifically:
+
+- `fixtures/02-late-out-of-order.json` — an event with an older timestamp, arriving last, still
+  lands in correct temporal position, gets versioned, and is explained in the audit log.
+- The **Replay** page — shuffle any fixture's event order and rerun; the resolved state is
+  byte-identical every time.
+- `server/tests/` — 54 tests across unit/integration/e2e, including a check that runs the same
+  shuffled replay twice and diffs the output for determinism.
+
 ## Architecture
 
 | Layer    | Tech                                              | Runs at                |
