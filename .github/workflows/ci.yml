@@ -1,0 +1,93 @@
+name: CI
+
+# Continuous integration only — proves the code is correct and safe.
+# No deploy job exists anywhere in this workflow (CLAUDE.md §9, §11).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-and-test:
+    name: Lint, typecheck, audit, test, build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            server/package-lock.json
+            client/package-lock.json
+
+      - name: Install root dependencies
+        run: npm install
+
+      - name: Install server dependencies
+        run: npm install --prefix server
+
+      - name: Install client dependencies
+        run: npm install --prefix client
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: npm audit (production dependencies, fail on high/critical) — server
+        run: npm audit --omit=dev --audit-level=high --prefix server
+
+      - name: npm audit (production dependencies, fail on high/critical) — client
+        run: npm audit --omit=dev --audit-level=high --prefix client
+
+      - name: Sanity-check schema.sqlite.sql applies cleanly to a throwaway DB
+        run: |
+          node -e "
+            const Database = require('better-sqlite3');
+            const fs = require('fs');
+            const db = new Database('/tmp/ci-schema-check.db');
+            db.exec(fs.readFileSync('server/src/db/schema.sqlite.sql', 'utf-8'));
+            console.log('schema.sqlite.sql applied cleanly');
+            db.close();
+          "
+        working-directory: server
+
+      - name: Unit + integration + e2e tests (each creates/tears down its own throwaway SQLite file)
+        run: npm test --prefix server
+
+      - name: Build server
+        run: npm run build --prefix server
+
+      - name: Build client
+        run: npm run build --prefix client
+
+  postgres-schema-parity:
+    name: (optional, non-blocking) Postgres schema parity
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: conflict_engine
+          POSTGRES_USER: conflict_engine
+          POSTGRES_PASSWORD: conflict_engine_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U conflict_engine"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply schema.postgres.sql to confirm it's valid, portable DDL
+        env:
+          PGPASSWORD: conflict_engine_ci
+        run: psql -h localhost -U conflict_engine -d conflict_engine -f server/src/db/schema.postgres.sql

@@ -1,0 +1,38 @@
+# Optional alternate path (CLAUDE.md §3): a local Postgres instance for
+# anyone who wants to test against "real" Postgres instead of the zero-install
+# SQLite default. Still entirely local — `docker-compose up` runs on your own
+# machine, no cloud service involved.
+#
+# server/src/db/schema.postgres.sql is mounted as a Postgres init script, so
+# it is applied automatically on first start. This proves the schema itself
+# is valid, portable Postgres DDL that stays in sync with schema.sqlite.sql
+# (same table/column shape, per CLAUDE.md §4) — the CI pipeline's
+# non-blocking postgres-schema-parity job does the same thing on every push.
+#
+# Note: the Express server in this repo talks to SQLite via better-sqlite3
+# and does not currently include a Postgres driver — see the README's
+# "Optional: Postgres via docker-compose" section for what this does and does
+# not cover.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: conflict-engine-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: conflict_engine
+      POSTGRES_USER: conflict_engine
+      POSTGRES_PASSWORD: conflict_engine_dev_only
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./server/src/db/schema.postgres.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U conflict_engine']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres-data:
