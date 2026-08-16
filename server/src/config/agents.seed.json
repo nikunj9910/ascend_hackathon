@@ -1,0 +1,22 @@
+[
+  {
+    "agent_id": "agent-alpha",
+    "display_name": "Alpha Extraction Service",
+    "trust_score": 0.9
+  },
+  {
+    "agent_id": "agent-beta",
+    "display_name": "Beta Summarizer",
+    "trust_score": 0.75
+  },
+  {
+    "agent_id": "agent-gamma",
+    "display_name": "Gamma Metadata Parser",
+    "trust_score": 0.6
+  },
+  {
+    "agent_id": "agent-delta",
+    "display_name": "Delta Legacy OCR",
+    "trust_score": 0.35
+  }
+]
