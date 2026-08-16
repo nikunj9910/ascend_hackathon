@@ -19,19 +19,9 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: |
-            package-lock.json
-            server/package-lock.json
-            client/package-lock.json
 
-      - name: Install root dependencies
+      - name: Install dependencies (npm workspaces — one install for root, server, and client)
         run: npm install
-
-      - name: Install server dependencies
-        run: npm install --prefix server
-
-      - name: Install client dependencies
-        run: npm install --prefix client
 
       - name: Lint
         run: npm run lint
@@ -40,10 +30,10 @@ jobs:
         run: npm run typecheck
 
       - name: npm audit (production dependencies, fail on high/critical) — server
-        run: npm audit --omit=dev --audit-level=high --prefix server
+        run: npm audit --omit=dev --audit-level=high -w server
 
       - name: npm audit (production dependencies, fail on high/critical) — client
-        run: npm audit --omit=dev --audit-level=high --prefix client
+        run: npm audit --omit=dev --audit-level=high -w client
 
       - name: Sanity-check schema.sqlite.sql applies cleanly to a throwaway DB
         run: |
@@ -58,13 +48,13 @@ jobs:
         working-directory: server
 
       - name: Unit + integration + e2e tests (each creates/tears down its own throwaway SQLite file)
-        run: npm test --prefix server
+        run: npm test -w server
 
       - name: Build server
-        run: npm run build --prefix server
+        run: npm run build -w server
 
       - name: Build client
-        run: npm run build --prefix client
+        run: npm run build -w client
 
   postgres-schema-parity:
     name: (optional, non-blocking) Postgres schema parity
