@@ -27,3 +27,19 @@ export function withDocumentLock<T>(documentId: string, fn: () => Promise<T> | T
 
   return run;
 }
+
+/**
+ * Acquires locks for a set of document_ids, always in sorted order, so that
+ * two overlapping multi-document batches (e.g. two /events/replay calls)
+ * can never acquire the same two locks in opposite order and deadlock.
+ */
+export async function withDocumentLocks<T>(documentIds: string[], fn: () => Promise<T> | T): Promise<T> {
+  const sorted = [...new Set(documentIds)].sort();
+
+  async function acquire(index: number): Promise<T> {
+    if (index >= sorted.length) return fn();
+    return withDocumentLock(sorted[index]!, () => acquire(index + 1));
+  }
+
+  return acquire(0);
+}
