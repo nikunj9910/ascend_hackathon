@@ -41,7 +41,7 @@ jobs:
             const Database = require('better-sqlite3');
             const fs = require('fs');
             const db = new Database('/tmp/ci-schema-check.db');
-            db.exec(fs.readFileSync('server/src/db/schema.sqlite.sql', 'utf-8'));
+            db.exec(fs.readFileSync('src/db/schema.sqlite.sql', 'utf-8'));
             console.log('schema.sqlite.sql applied cleanly');
             db.close();
           "
